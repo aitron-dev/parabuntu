@@ -85,16 +85,18 @@ echo Install Debian
 debootstrap buster ${root_mnt} http://deb.debian.org/debian/
 
 echo Applying overlays
-#TODO: Use tarballs (for owner/group)?
+#TODO: Use tarballs (for owner/group)
 for d in $(find ${top}/overlays -mindepth 1 -maxdepth 1 -type d | sort -g); do
 	echo Applying overlay $d
-	mkdir ${root_mnt}/opt/$d
-	rsync -ap --no-owner --no-group $d/ ${root_mnt}/opt/$d
+	dname=$(echo $d | sed 's|.*/||')
+	mkdir ${root_mnt}/opt/$dname
+	rsync -ap --no-owner --no-group $d/ ${root_mnt}/opt/$dname
 done
 for f in $(find ${top}/overlays -mindepth 1 -maxdepth 1 -type f -name "*.tar.gz" | sort -g); do
 	echo Applying overlay tarball $f
-	mkdir ${root_mnt}/opt/${f::-7}
-	tar xfp $f -C ${root_mnt}/opt/${f::-7}
+	fname=$(echo $f | sed 's|.*/||')
+	mkdir ${root_mnt}/opt/${fname::-7}
+	tar xfp $f -C ${root_mnt}/opt/${fname::-7}
 done
 
 find ${root_mnt} -name ".gitkeep" -delete
@@ -109,10 +111,10 @@ if [ ${esdk_name} != "esdk" ]; then
 fi
 
 echo Copying kernel modules to rootfs
-rsync -ap --no-owner --no-group  modules/ ${top}/mnt/rootfs/
+rsync -ap --no-owner --no-group  modules/ ${top}/mnt/rootfs/usr
 echo Improving module source+build symlinks
 (
-	for d in ${top}/mnt/rootfs/lib/modules/*; do
+	for d in ${top}/mnt/rootfs/usr/lib/modules/*; do
 		cd $d &&
 		rm -f source build &&
 		ln -sf /usr/src/parallella-linux source &&
