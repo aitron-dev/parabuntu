@@ -49,16 +49,16 @@ unset LC_ALL
 unset LC_TIME
 export LC_ALL=C
 
-if ! [ -e ${ubuntu_tarball} ]; then
-	echo Downloading Ubuntu Base tarball
-	wget ${UBUNTU_URL} -O ${ubuntu_tarball}
-fi
+#if ! [ -e ${ubuntu_tarball} ]; then
+#	echo Downloading Ubuntu Base tarball
+#	wget ${UBUNTU_URL} -O ${ubuntu_tarball}
+#fi
 
-echo Checking md5sums
-if ! md5sum -c md5sum.txt; then
-	echo md5sum fail
-	exit 1
-fi
+#echo Checking md5sums
+#if ! md5sum -c md5sum.txt; then
+#	echo md5sum fail
+#	exit 1
+#fi
 
 echo Removing old rootfs image
 rm -rf ${root_image} ${root_image}.gz
@@ -78,18 +78,23 @@ echo Mounting root filesystem
 mkdir -p ${root_mnt}
 mount ${root_dev} ${root_mnt}
 
-echo Unpacking Ubuntu tarball
-tar xfzp ${ubuntu_tarball} -C ${root_mnt} --strip-components 0
+#echo Unpacking Ubuntu tarball
+#tar xfzp ${ubuntu_tarball} -C ${root_mnt} --strip-components 0
+
+echo Install Debian
+debootstrap buster ${root_mnt} http://deb.debian.org/debian/
 
 echo Applying overlays
 #TODO: Use tarballs (for owner/group)?
 for d in $(find ${top}/overlays -mindepth 1 -maxdepth 1 -type d | sort -g); do
 	echo Applying overlay $d
-	rsync -ap --no-owner --no-group $d/ ${root_mnt}
+	mkdir ${root_mnt}/opt/$d
+	rsync -ap --no-owner --no-group $d/ ${root_mnt}/opt/$d
 done
 for f in $(find ${top}/overlays -mindepth 1 -maxdepth 1 -type f -name "*.tar.gz" | sort -g); do
 	echo Applying overlay tarball $f
-	tar xfp $f -C ${root_mnt}
+	mkdir ${root_mnt}/opt/${f::-7}
+	tar xfp $f -C ${root_mnt}/opt/${f::-7}
 done
 
 find ${root_mnt} -name ".gitkeep" -delete
