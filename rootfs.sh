@@ -82,7 +82,7 @@ mount ${root_dev} ${root_mnt}
 #tar xfzp ${ubuntu_tarball} -C ${root_mnt} --strip-components 0
 
 echo Install Debian
-debootstrap buster ${root_mnt} http://deb.debian.org/debian/
+debootstrap --arch armhf buster ${root_mnt} http://deb.debian.org/debian/
 
 echo Applying overlays
 #TODO: Use tarballs (for owner/group)
