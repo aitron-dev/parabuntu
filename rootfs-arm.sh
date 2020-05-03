@@ -53,6 +53,8 @@ apt-get install -yy $(cat ${top}/packages.basic.txt | grep -v "^#" | sed 's,\s\s
 
 apt-get clean
 
+dpkg-reconfigure locales
+
 echo Removing generated host SSH keys
 rm -fr /etc/ssh/*key*
 
