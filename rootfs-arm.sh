@@ -40,8 +40,8 @@ touch /etc/dhcp/dhclient.conf
 apt-get install -o Dpkg::Options::="--force-confold" -o Dpkg::Options::="--force-confdef" --force-yes -yy \
 	isc-dhcp-client isc-dhcp-common
 
-echo Unminimize Ubuntu install
-yes | unminimize || true # Will fail in restart hook
+#echo Unminimize Ubuntu install
+#yes | unminimize || true # Will fail in restart hook
 
 echo Upgrading packages
 apt-get dist-upgrade -yy

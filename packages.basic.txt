@@ -17,7 +17,7 @@ sudo
 dialog
 
 # Language Packs (Fix utf8 & get rid of Ubuntu's annoying locale warings)
-language-pack-en
+#language-pack-en
 
 # Editors
 vim-nox emacs-nox nano
@@ -56,7 +56,7 @@ device-tree-compiler
 usbutils
 
 ### Wifi
-linux-firmware
+#linux-firmware
 
 ### Packages for Epiphany SDK
 libmpfr-dev libmpc-dev libgmp3-dev
@@ -87,6 +87,6 @@ i2c-tools
 
 # OpenMPI
 libopenmpi-dev
-libopenmpi2
+libopenmpi3
 openmpi-bin
 openmpi-common
